@@ -151,3 +151,34 @@ aws iam list-roles --endpoint-url http://localhost:4566 --no-sign-request
         }
     ]
     }
+
+
+## GROUP
+
+### CREATE GROUP
+
+```
+aws iam create-group --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+```
+### GET ALL GROUPS
+
+```
+aws iam list-groups --endpoint-url http://localhost:4566 --no-sign-request
+```
+### ADD USER TO GROUP
+
+```
+aws iam add-user-to-group --user-name sakib_developer --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+### ATTACH POLICY TO A GROUP
+
+```
+aws iam attach-group-policy --group-name Admins --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+### GET  ATTACHED POLICIES OF A GROUP
+
+```
+aws iam list-attached-group-policies --group-name Admins --endpoint-url http://localhost:4566 --no-sign-request
+```
