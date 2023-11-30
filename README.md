@@ -170,6 +170,11 @@ aws iam list-groups --endpoint-url http://localhost:4566 --no-sign-request
 ```
 aws iam add-user-to-group --user-name sakib_developer --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
 ```
+### GET GROUP MEMBERS
+
+```
+aws iam get-group --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+```
 
 ### ATTACH POLICY TO A GROUP
 
@@ -181,4 +186,71 @@ aws iam attach-group-policy --group-name Admins --policy-arn arn:aws:iam::aws:po
 
 ```
 aws iam list-attached-group-policies --group-name Admins --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+### CREATE A USER, THEN ASSIGN THAT USER IN A GROUP AND THEN ACCESS RESOURCES WITH THAT USER
+
+```
+aws iam create-user --user-name test_user --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+```
+aws iam create-group --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+```
+aws iam add-user-to-group --user-name test_user --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+
+```
+
+
+```
+aws iam create-access-key --user-name test_user --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+    {
+    "AccessKey": {
+        "UserName": "test_user",
+        "AccessKeyId": "LKIAQAAAAAAAEBZNGPKY",
+        "Status": "Active",
+        "SecretAccessKey": "NHMJxRq9dY/d7ls0+l/uUGAjXPgazzPLOjDk7fxH",
+        "CreateDate": "2023-11-30T17:11:04Z"
+    }
+    }
+
+
+Create S3 Bucket
+```
+aws s3api create-bucket --bucket mys3bucket --region ap-east-1 --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+Create Policy
+```
+aws iam create-policy --policy-name S3AccessPolicy --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"s3:*","Resource":"arn:aws:s3:::mys3bucket/*"}]}' --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+Attach Policy to A Group
+```
+aws iam attach-group-policy --group-name Developers --policy-arn arn:aws:iam::000000000000:policy/S3AccessPolicy --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+Get Attched Policy of A Group
+```
+aws iam list-attached-group-policies --group-name Developers --endpoint-url http://localhost:4566 --no-sign-request
+```
+
+
+Configure Credentials
+```
+aws configure set aws_access_key_id LKIAQAAAAAAAEBZNGPKY
+
+aws configure set aws_secret_access_key NHMJxRq9dY/d7ls0+l/uUGAjXPgazzPLOjDk7fx
+```
+```
+aws s3 ls s3://mys3bucket
 ```
